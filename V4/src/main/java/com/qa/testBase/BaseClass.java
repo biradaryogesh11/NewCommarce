@@ -1,5 +1,7 @@
 package com.qa.testBase;
 
+import java.time.Duration;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.openqa.selenium.WebDriver;
@@ -11,11 +13,14 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.qa.pageLayer.LoginPage;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class BaseClass {
 	public static WebDriver driver;
 	public static Logger logger;
+	public static LoginPage loginpage;
 	
 	@BeforeClass
 	@Test
@@ -56,15 +61,24 @@ public class BaseClass {
 			driver = new ChromeDriver();
 			logger.info("browser started ");
 		}
+		driver.get("https://demo.nopcommerce.com/");
+		driver.manage().window().maximize();
+		driver.manage().deleteAllCookies();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));
+		
 
+		loginpage= new LoginPage();
+		 
 	}
+	
 
 	@AfterMethod
 	@Test
 	public void tearDown() throws InterruptedException
 	{
 		Thread.sleep(20000);
-		driver.close();
+		driver.quit();
 	}
 	
 }
